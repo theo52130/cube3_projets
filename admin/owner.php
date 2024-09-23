@@ -1,41 +1,32 @@
 <?php
 // Connexion à la base de données
-$conn = new mysqli('localhost', 'root', 'theooreo', 'test_cube_trois');
+$conn = new mysqli('localhost', 'root', '', 'test_cube_trois');
 
 if ($conn->connect_error) {
     die("Erreur de connexion : " . $conn->connect_error);
 }
 
-// Requête pour récupérer les clients et leurs entreprises associées
-$result_clients = $conn->query("
-    SELECT clients.id, clients.nom, clients.email, entreprises.nom AS entreprise_nom 
-    FROM clients 
-    LEFT JOIN entreprises 
-    ON clients.entreprise_id = entreprises.id
+// Requête pour récupérer les comptes clients
+$result_comptes = $conn->query("
+    SELECT id, nom, email, adresse, email_entreprise, siret 
+    FROM comptes
 ");
 
-if (!$result_clients) {
-    die("Erreur lors de la récupération des clients : " . $conn->error);
+if (!$result_comptes) {
+    die("Erreur lors de la récupération des comptes : " . $conn->error);
 }
 
-// Requête pour récupérer la liste des entreprises
-$result_entreprises = $conn->query("SELECT * FROM entreprises");
-
-if (!$result_entreprises) {
-    die("Erreur lors de la récupération des entreprises : " . $conn->error);
-}
-
-// Requête pour récupérer toutes les factures avec les informations des clients
+// Requête pour récupérer toutes les factures avec les informations des comptes
 $sql_factures = "
     SELECT 
         factures.id, 
-        clients.nom AS client_nom, 
+        comptes.nom AS compte_nom, 
         factures.date_creation, 
         factures.date_livraison, 
         factures.total, 
         factures.etat 
     FROM factures 
-    LEFT JOIN clients ON factures.client_id = clients.id
+    LEFT JOIN comptes ON factures.comptes_id = comptes.id
     ORDER BY factures.date_creation DESC
 ";
 
@@ -60,7 +51,13 @@ $produits_par_facture = [];
 if (count($facture_ids) > 0) {
     // Créer une liste de placeholders pour la requête préparée
     $placeholders = implode(',', array_fill(0, count($facture_ids), '?'));
-    $sql_produits = "SELECT * FROM produits WHERE facture_id IN ($placeholders)";
+    $sql_produits = "
+        SELECT produits.*, factures_produits.facture_id 
+        FROM produits 
+        INNER JOIN factures_produits 
+        ON produits.id = factures_produits.produit_id 
+        WHERE factures_produits.facture_id IN ($placeholders)
+    ";
 
     $stmt_produits = $conn->prepare($sql_produits);
 
@@ -90,8 +87,8 @@ if (count($facture_ids) > 0) {
 
 <head>
     <meta charset="UTF-8">
-    <title>Comptabilité - Clients, Entreprises, Factures et Produits</title>
-    <link rel="stylesheet" type="text/css" href="./assets/css/styles.css">
+    <title>Comptabilité - Comptes, Factures et Produits</title>
+    <link rel="stylesheet" type="text/css" href="../assets/css/owner.css">
 </head>
 
 <body>
@@ -100,61 +97,60 @@ if (count($facture_ids) > 0) {
         <nav>
             <a href="">Listes clients</a>
             <a href="add_client.php">Créer Clients</a>
-            <a href="list_entreprises.php">Listes Entreprises</a>
+            <a href="../autres/list_entreprises.php">Listes Entreprises</a>
             <a href="add_entreprise.php">Créer Entreprises</a>
-            <a href="list_factures.php">Listes Factures</a>
+            <a href="../autres/list_factures.php">Listes Factures</a>
             <a href="create_facture.php">Créer Factures</a>
-            <a href="download_pdf.php">Télécharger PDF</a>
-            <a href="export_csv.php">Télécharger CSV</a>
+            <a href="../download_pdf.php">Télécharger PDF</a>
+            <a href="../export_csv.php">Télécharger CSV</a>
         </nav>
     </header>
     <div class="container">
 
         <h2>Bonjour (nom)</h2>
 
-        <!-- Section Clients -->
-        <h3>Voici votre / vos comptes clients :</h3>
+        <!-- Section Comptes -->
+        <div id="header-users">
+            <h3>Voici vos comptes :</h3>
+            <a href="./update/add_compte.php" class="btn add-btn">Add</a>
+        </div>
+        
         <table>
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Nom</th>
                     <th>Email</th>
-                    <th>Entreprise</th>
+                    <th>Adresse</th>
+                    <th>Email entreprise</th>
+                    <th>SIRET</th>
+                    <th>Options</th>
                 </tr>
             </thead>
             <tbody>
-                <?php while ($client = $result_clients->fetch_assoc()) { ?>
+                <?php while ($compte = $result_comptes->fetch_assoc()) { ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($client['id']); ?></td>
-                        <td><?php echo htmlspecialchars($client['nom']); ?></td>
-                        <td><?php echo htmlspecialchars($client['email']); ?></td>
-                        <td><?php echo htmlspecialchars($client['entreprise_nom']) ? htmlspecialchars($client['entreprise_nom']) : 'Aucune'; ?></td>
+                        <td><?php echo htmlspecialchars($compte['id']); ?></td>
+                        <td><?php echo htmlspecialchars($compte['nom']); ?></td>
+                        <td><?php echo htmlspecialchars($compte['email']); ?></td>
+                        <td><?php echo htmlspecialchars($compte['adresse']); ?></td>
+                        <td><?php echo htmlspecialchars($compte['email_entreprise'] ?? 'Aucune', ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td><?php echo htmlspecialchars($compte['siret'] ?? 'N/A', ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td>
+                            <form method="get" action="./update/update.php">
+                                <input type="hidden" name="id" value="<?php echo htmlspecialchars($compte['id']); ?>">
+                                <button type="submit" class="btn update-btn">Update</button>
+                            </form>
+                            <form method="get" action="./update/delete.php">
+                                <input type="hidden" name="id" value="<?php echo htmlspecialchars($compte['id']); ?>">
+                                <button type="submit" class="btn delete-btn">Delete</button>
+                            </form>
+                        </td>
                     </tr>
                 <?php } ?>
             </tbody>
         </table>
 
-        <!-- Section Entreprises -->
-        <h3>Voici votre / vos entreprises :</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nom</th>
-                    <th>Adresse</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while ($entreprise = $result_entreprises->fetch_assoc()) { ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($entreprise['id']); ?></td>
-                        <td><?php echo htmlspecialchars($entreprise['nom']); ?></td>
-                        <td><?php echo htmlspecialchars($entreprise['adresse']); ?></td>
-                    </tr>
-                <?php } ?>
-            </tbody>
-        </table>
 
         <!-- Section Factures -->
         <h3>Voici vos factures :</h3>
@@ -162,7 +158,7 @@ if (count($facture_ids) > 0) {
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Nom client</th>
+                    <th>Nom du compte</th>
                     <th>Date de création</th>
                     <th>Date de livraison</th>
                     <th>Total €</th>
@@ -173,9 +169,15 @@ if (count($facture_ids) > 0) {
                 <?php while ($facture = $result_factures->fetch_assoc()) { ?>
                     <tr>
                         <td><?php echo htmlspecialchars($facture['id']); ?></td>
-                        <td><?php echo htmlspecialchars($facture['client_nom']); ?></td>
+                        <td><?php echo htmlspecialchars($facture['compte_nom']); ?></td>
                         <td><?php echo htmlspecialchars($facture['date_creation']); ?></td>
-                        <td><?php echo htmlspecialchars($facture['date_livraison']); ?></td>
+                        <td><?php
+                            if ($facture['date_livraison'] !== null) {
+                                echo htmlspecialchars($facture['date_livraison'], ENT_QUOTES, 'UTF-8');
+                            } else {
+                                echo '';
+                            } ?>
+                        </td>
                         <td><?php echo number_format($facture['total'], 2, ',', ' '); ?> €</td>
                         <td><?php echo htmlspecialchars($facture['etat']); ?></td>
                     </tr>
@@ -228,4 +230,4 @@ if (count($facture_ids) > 0) {
 <?php
 // Fermer la connexion
 $conn->close();
-?>
+?>-

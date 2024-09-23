@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'config.php'; // Fichier pour se connecter à la base de données
+require 'db.php'; // Fichier pour se connecter à la base de données
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];

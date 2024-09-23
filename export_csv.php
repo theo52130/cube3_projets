@@ -1,5 +1,5 @@
 <?php
-$conn = new mysqli('localhost', 'root', 'theooreo', 'test_cube_trois');
+$conn = new mysqli('localhost', 'root', '', 'test_cube_trois');
 
 header('Content-Type: text/csv');
 header('Content-Disposition: attachment;filename=factures.csv');
@@ -12,4 +12,3 @@ while ($row = $result->fetch_assoc()) {
     fputcsv($output, $row);
 }
 fclose($output);
-?>

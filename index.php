@@ -12,14 +12,14 @@
         <h1>Control Tech</h1>
         <nav>
             <a href="">Listes clients</a>
-            <a href="add_client.php">Créer Clients</a>
-            <a href="list_entreprises.php">Listes Entreprises</a>
-            <a href="add_entreprise.php">Créer Entreprises</a>
-            <a href="list_factures.php">Listes Factures</a>
-            <a href="create_facture.php">Créer Factures</a>
+            <a href="admin/add_client.php">Créer Clients</a>
+            <a href="autres/list_entreprises.php">Listes Entreprises</a>
+            <a href="admin/add_entreprise.php">Créer Entreprises</a>
+            <a href="autres/list_factures.php">Listes Factures</a>
+            <a href="admin/create_facture.php">Créer Factures</a>
             <a href="download_pdf.php">Télécharger PDF</a>
             <a href="export_csv.php">Télécharger CSV</a>
-            <a href="owner.php">OWNER PHP</a>
+            <a href="admin/owner.php">OWNER PHP</a>
         </nav>
     </header>
 
