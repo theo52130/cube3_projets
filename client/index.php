@@ -2,7 +2,7 @@
 session_start();
 
 // Vérification de la connexion et du rôle
-if (!isset($_SESSION['nom']) || $_SESSION['role'] != 'client') {
+if (!isset($_SESSION['nom']) || $_SESSION['role'] != 'client'&& $_SESSION['role'] != 'admin') {
     header("Location: ../login.php");
     exit();
 }
