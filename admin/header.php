@@ -9,8 +9,10 @@
 
 <body>
     <header>
-        <h1>Control Tech</h1>
+        <h1>Control Tech (Admin)</h1>
         <nav>
+            <a href="index.php">Accueil</a>
+            <a href="account.php">Mon Compte</a>
             <a href="../logout.php">LogOut</a>
         </nav>
     </header>

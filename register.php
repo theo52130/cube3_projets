@@ -1,7 +1,47 @@
+<?php
+require('./config.php');
+
+// Traitement du formulaire d'inscription
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Sécuriser les entrées utilisateur
+    $nom = mysqli_real_escape_string($conn, $_POST['nom']);
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $adresse = mysqli_real_escape_string($conn, $_POST['adresse']);
+    $email_entreprise = !empty($_POST['email_entreprise']) ? mysqli_real_escape_string($conn, $_POST['email_entreprise']) : null;
+    $siret = !empty($_POST['siret']) ? mysqli_real_escape_string($conn, $_POST['siret']) : null;
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $role = mysqli_real_escape_string($conn, $_POST['role']);
+
+    // Préparer la requête SQL pour éviter l'injection SQL
+    $stmt = $conn->prepare("INSERT INTO comptes (nom, email, adresse, email_entreprise, siret, password, role) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssssss", $nom, $email, $adresse, $email_entreprise, $siret, $password, $role);
+
+    if ($stmt->execute()) {
+        // Redirection après inscription réussie
+        echo '<script>
+            if (window.history.length > 2) {
+                window.history.go(-2);
+            } else {
+                window.location.href = "redirection.php";
+            }
+        </script>';
+        exit();
+    } else {
+        // Afficher un message d'erreur sans divulguer des détails techniques
+        echo "Erreur lors de l'inscription. Veuillez réessayer.";
+    }
+
+    $stmt->close();
+    $conn->close();
+}
+?>
+
 <!DOCTYPE html>
 <html>
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription Compte</title>
     <link rel="stylesheet" href="./assets/css/register-style.css">
 </head>
@@ -38,29 +78,6 @@
         <input type="submit" value="S'inscrire">
     </form>
 
-    <?php
-    require('./config.php');
-
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $nom = mysqli_real_escape_string($conn, $_POST['nom']);
-        $email = mysqli_real_escape_string($conn, $_POST['email']);
-        $adresse = mysqli_real_escape_string($conn, $_POST['adresse']);
-        $email_entreprise = !empty($_POST['email_entreprise']) ? mysqli_real_escape_string($conn, $_POST['email_entreprise']) : null;
-        $siret = !empty($_POST['siret']) ? mysqli_real_escape_string($conn, $_POST['siret']) : null;
-        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-        $role = mysqli_real_escape_string($conn, $_POST['role']);
-
-        // Insertion dans la table 'comptes' avec les nouveaux champs
-        $sql = "INSERT INTO comptes (nom, email, adresse, email_entreprise, siret, password, role) 
-                VALUES ('$nom', '$email', '$adresse', " . ($email_entreprise ? "'$email_entreprise'" : "NULL") . ", " . ($siret ? "'$siret'" : "NULL") . ", '$password', '$role')";
-
-        if (mysqli_query($conn, $sql)) {
-            echo "Inscription réussie!";
-        } else {
-            echo "Erreur: " . $sql . "<br>" . mysqli_error($conn);
-        }
-    }
-    ?>
 </body>
 
 </html>
