@@ -1,64 +1,82 @@
 <?php
-session_start();
-require 'db.php'; // Fichier pour se connecter à la base de données
+    require('./config.php');
+    
+    // Démarrer la session en haut de la page
+    session_start();
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $email = mysqli_real_escape_string($conn, $_POST['email']);
+        $password = $_POST['password'];
 
-    // Préparation de la requête SQL pour récupérer l'utilisateur
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
-    $stmt->execute([$username]);
-    $user = $stmt->fetch();
+        // Rechercher le compte correspondant à cet email
+        $sql = "SELECT * FROM comptes WHERE email = '$email'";
+        $result = mysqli_query($conn, $sql);
 
-    if ($user && password_verify($password, $user['password'])) {
-        // Authentification réussie
-        $_SESSION['username'] = $user['username'];
-        $_SESSION['role'] = $user['role'];
+        if (mysqli_num_rows($result) > 0) {
+            $row = mysqli_fetch_assoc($result);
 
-        // Redirection selon le rôle
-        if ($user['role'] == 'admin') {
-            header('Location: admin.php');
-        } elseif ($user['role'] == 'user') {
-            header('Location: user.php');
+            // Vérification du mot de passe
+            if (password_verify($password, $row['password'])) {
+                // Connexion réussie, démarrer la session utilisateur
+                $_SESSION['user_id'] = $row['id'];  // ID du compte
+                $_SESSION['nom'] = $row['nom'];     // Nom de l'utilisateur
+                $_SESSION['email'] = $row['email']; // Email de l'utilisateur
+                $_SESSION['adresse'] = $row['adresse']; // Adresse de l'utilisateur
+                $_SESSION['email_entreprise'] = $row['email_entreprise']; // email entreprise
+                $_SESSION['siret'] = $row['siret']; // siret de l'utilisateur
+                $_SESSION['role'] = $row['role'];   // Rôle de l'utilisateur
+
+                // Ajouter les champs supplémentaires si ils existent
+                if (!empty($row['email_entreprise'])) {
+                    $_SESSION['email_entreprise'] = $row['email_entreprise'];
+                }
+                if (!empty($row['siret'])) {
+                    $_SESSION['siret'] = $row['siret'];
+                }
+
+                // Redirection après connexion réussie
+                header("Location: redirection.php");
+                exit();
+            } else {
+                echo "Mot de passe incorrect.";
+            }
         } else {
-            header('Location: guest.php');
+            echo "Aucun compte trouvé avec cet email.";
         }
-    } else {
-        // Identifiants incorrects
-        echo "Nom d'utilisateur ou mot de passe incorrect.";
     }
-}
-?>
+    ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion</title>
+    <link rel="stylesheet" href="./assets/css/login-style.css">
 </head>
+
 <body>
-<h2>Page de Connexion</h2>
-<form id="loginForm" method="POST" action="login.php">
-    <label for="username">Nom d'utilisateur:</label><br>
-    <input type="text" id="username" name="username" required><br><br>
-    <label for="password">Mot de passe:</label><br>
-    <input type="password" id="password" name="password" required><br><br>
-    <button type="submit">Se connecter</button>
-</form>
 
-<script>
-    const form = document.getElementById('loginForm');
-    form.addEventListener('submit', function(event) {
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
+    <h2>Connexion</h2>
 
-        if (username === '' || password === '') {
-            alert('Veuillez remplir tous les champs.');
-            event.preventDefault();
-        }
-    });
-</script>
+    <form action="login.php" method="post">
+
+        <label>Email:</label>
+        <input type="email" name="email" required><br>
+
+        <label>Mot de passe:</label>
+        <input type="password" name="password" required><br>
+
+        <input type="submit" value="Se connecter">
+
+    </form>
+
+    <!-- A RETIRER AVANT PROD, QUE PENDANT LES TESTS !!!! -->
+    <script>console.log('Admin : test@admin.com\nMdp : test');</script>
+    <script>console.log('Employer : test@employer.com\nMdp : test');</script>
+    <script>console.log('Client : test@client.com\nMdp : test');</script>
+
 </body>
+
 </html>
