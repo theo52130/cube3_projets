@@ -20,6 +20,12 @@ if (isset($_GET['id'])) {
     $stmt->close();
 }
 
+// Fonction pour nettoyer le siret
+function nettoyerSiret($siret)
+{
+    return str_replace(' ', '', $siret);
+}
+
 // Traitement de la mise à jour
 if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['action'] == 'update') {
     $id = intval($_POST['id']);
@@ -27,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['action'] == 'update') {
     $email = $_POST['email'];
     $adresse = $_POST['adresse'];
     $email_entreprise = !empty($_POST['email_entreprise']) ? $_POST['email_entreprise'] : null;
-    $siret = !empty($_POST['siret']) ? $_POST['siret'] : null;
+    $siret = !empty($_POST['siret']) ? nettoyerSiret($_POST['siret']) : null;
     $password = !empty($_POST['password']) ? password_hash($_POST['password'], PASSWORD_DEFAULT) : null;
     $role = $_POST['role'];
 
@@ -107,6 +113,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['action'] == 'update') {
             <input type="submit" value="Mettre à jour">
         </form>
     </div>
+
+    <script>
+        function nettoyerSiret($siret) {
+            return str_replace(' ', '', $siret);
+        }
+    </script>
 </body>
 
 </html>
