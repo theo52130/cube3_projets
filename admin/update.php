@@ -38,9 +38,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['action'] == 'update') {
                     adresse = ?, 
                     email_entreprise = ?, 
                     siret = ?, 
-                    role = ? " . 
-                    ($password ? ", password = ?" : "") . 
-                  " WHERE id = ?";
+                    role = ? " .
+        ($password ? ", password = ?" : "") .
+        " WHERE id = ?";
 
     $stmt = $conn->prepare($updateSql);
 
@@ -81,12 +81,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['action'] == 'update') {
             <input type="hidden" name="id" value="<?php echo htmlspecialchars($row['id']); ?>">
             <div id="table-1">
                 <div id="col-1">
-                    <label>Nom:</label>
+                    <label>*Nom:</label>
                     <input type="text" name="nom" value="<?php echo htmlspecialchars($row['nom']); ?>" required><br>
-                    <label>Email:</label>
+                    <label>*Email:</label>
                     <input type="email" name="email" value="<?php echo htmlspecialchars($row['email']); ?>" required><br>
-                    <label>Adresse:</label>
-                    <input type="text" name="adresse" value="<?php echo htmlspecialchars($row['adresse']); ?>"><br>
+                    <label>*Adresse:</label>
+                    <input type="text" name="adresse" value="<?php echo htmlspecialchars($row['adresse']); ?>" required><br>
                 </div>
 
                 <div id="col-2">

@@ -78,11 +78,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['action'] == 'update') {
             <input type="hidden" name="action" value="update">
             <div id="table-1">
                 <div id="col-1">
-                    <label>Nom:</label>
+                    <label>*Nom:</label>
                     <input type="text" name="nom" value="<?php echo htmlspecialchars($row['nom']); ?>" required pattern="[A-Za-zÀ-ÿ\s'-]+" title="Nom ne doit contenir que des lettres et des espaces"><br>
-                    <label>Email:</label>
+                    <label>*Email:</label>
                     <input type="email" name="email" value="<?php echo htmlspecialchars($row['email']); ?>" required><br>
-                    <label>Adresse:</label>
+                    <label>*Adresse:</label>
                     <input type="text" name="adresse" value="<?php echo htmlspecialchars($row['adresse']); ?>"><br>
                 </div>
 
@@ -95,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['action'] == 'update') {
                     <input type="password" name="password" placeholder="Laissez vide pour ne pas changer" pattern=".{6,}" title="Mot de passe doit contenir au moins 6 caractères"><br>
                 </div>
             </div>
-            
+
             <input type="submit" value="Mettre à jour">
         </form>
     </div>
