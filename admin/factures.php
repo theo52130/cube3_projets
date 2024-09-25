@@ -1,30 +1,82 @@
-<div id="pageFactures">
+<?php
+// Inclure le fichier de configuration pour la connexion à la base de données
+include '../config.php';
 
-    <h3>Produit</h3>
+// Requête SQL pour récupérer les produits
+$sql = "SELECT * FROM produits";
+$result = $conn->query($sql);
 
-    <?php
-    // Connexion à la base de données
-    $host = 'localhost'; // L'adresse du serveur de base de données
-    $dbname = 'nom_de_ta_base_de_donnees'; // Le nom de ta base de données
-    $username = 'ton_nom_utilisateur'; // Ton nom d'utilisateur MySQL
-    $password = 'ton_mot_de_passe'; // Ton mot de passe MySQL
+// Vérifier si la requête a réussi
+if ($result === false) {
+    die("Erreur de requête : " . $conn->error);
+}
 
-    try {
-        // Création d'une nouvelle connexion PDO
-        $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        // Requête SQL pour récupérer les produits
-        $sql = "SELECT * FROM produits";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute();
-
-        // Récupération des résultats
-        $produits = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        echo "Erreur : " . $e->getMessage();
+$produits = [];
+if ($result->num_rows > 0) {
+    // Récupérer les résultats dans un tableau associatif
+    while ($row = $result->fetch_assoc()) {
+        $produits[] = $row;
     }
-    ?>
+}
 
+// Fermer la connexion à la base de données
+$conn->close();
+?>
 
-</div>
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Produits</title>
+    <style>
+        /* Styles CSS pour le tableau */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="pageFactures">
+        <h3>Produit</h3>
+
+        <?php if (!empty($produits)): ?>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Prix Unitaire</th>
+                        <th>Quantité</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($produits as $produit): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($produit['description']); ?></td>
+                            <td><?= number_format($produit['prix_unitaire'], 2); ?> €</td>
+                            <td><?= htmlspecialchars($produit['quantite']); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <p>Aucun produit trouvé.</p>
+        <?php endif; ?>
+    </div>
+</body>
+
+</html>
