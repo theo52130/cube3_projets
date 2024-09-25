@@ -64,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="password-container">
             <input type="password" id="password" name="password" placeholder="Entrez votre mot de passe">
             <button type="button" id="togglePassword" aria-label="Afficher/Masquer le mot de passe">
-                <img src="./img/visibility_close.svg" alt="Afficher le mot de passe" id="eyeIcon">
+                <img src="./assets/img/visibility_close.svg" alt="Afficher le mot de passe" id="eyeIcon">
             </button>
         </div>
 
@@ -81,10 +81,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Toggle the type attribute
                 if (passwordInput.type === 'password') {
                     passwordInput.type = 'text';
-                    eyeIcon.src = './img/visibility_open.svg'; // Change the icon to show the password is visible
+                    eyeIcon.src = './assets/img/visibility_open.svg'; // Change the icon to show the password is visible
                 } else {
                     passwordInput.type = 'password';
-                    eyeIcon.src = './img/visibility_close.svg'; // Change the icon to hide the password
+                    eyeIcon.src = './assets/img/visibility_close.svg'; // Change the icon to hide the password
                 }
             });
         });
