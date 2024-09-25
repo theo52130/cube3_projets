@@ -30,6 +30,8 @@ $result = mysqli_query($conn, $sql);
     <div id="containerAdmin">
         <h2 id="customWelcome">Bienvenue, <?php echo htmlspecialchars($_SESSION['nom']); ?> !</h2>
 
+        <h3>Listes des comptes</h3>
+
         <a href="../register.php" class="btn add-btn">ADD</a>
 
         <!-- Tableau des comptes -->
@@ -70,35 +72,38 @@ $result = mysqli_query($conn, $sql);
                 ?>
             </tbody>
         </table>
+
+        <?php require "factures.php"; ?>
+
     </div>
 
     <script>
         function deleteRow(id) {
-    if (confirm('Êtes-vous sûr de vouloir supprimer cet élément ?')) {
-        fetch('delete.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({
-                'action': 'delete',
-                'id': id
-            })
-        })
-        .then(response => response.text())
-        .then(result => {
-            if (result.trim() === 'success') {
-                document.getElementById('row-' + id).remove();
-            } else {
-                alert('Erreur lors de la suppression');
+            if (confirm('Êtes-vous sûr de vouloir supprimer cet élément ?')) {
+                fetch('delete.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: new URLSearchParams({
+                            'action': 'delete',
+                            'id': id
+                        })
+                    })
+                    .then(response => response.text())
+                    .then(result => {
+                        if (result.trim() === 'success') {
+                            document.getElementById('row-' + id).remove();
+                        } else {
+                            alert('Erreur lors de la suppression');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur:', error);
+                        alert('Erreur lors de la suppression');
+                    });
             }
-        })
-        .catch(error => {
-            console.error('Erreur:', error);
-            alert('Erreur lors de la suppression');
-        });
-    }
-}
+        }
     </script>
 </body>
 
