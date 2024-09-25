@@ -10,7 +10,7 @@ class pdf extends tFPDF
         $this->AddFont('DejaVu', '', 'DejaVuSansCondensed.ttf', true);
         $this->AddFont('DejaVu', 'B', 'DejaVuSansCondensed-Bold.ttf', true);
         $this->AddFont('DejaVu', 'I', 'DejaVuSansCondensed-Oblique.ttf', true); // Add italic font
-        $this->SetCreator(utf8_decode("Damien BARRERE, www.crac-design.com"));
+        $this->SetCreator(utf8_decode("Damien BARRERE, tby-innovations.com"));
         $this->SetFont('DejaVu', '', 12);
     }
 
@@ -20,7 +20,7 @@ class pdf extends tFPDF
         $this->SetFont('DejaVu', 'B', 12);
         $this->SetTextColor(0, 0, 200);
         $this->SetXY(10, 30);
-        $this->Cell(50, 6, "www.Crac-Design.com", 0, 2, '', false);
+        $this->Cell(50, 6, "tby-innovations.com", 0, 2, '', false);
         $this->SetFont('DejaVu', '', 12);
         $this->SetTextColor(0, 0, 0);
         $this->MultiCell(50, 5, utf8_decode("Adresse de l'entreprise\nCP VILLE\nTel: 05.00.00.00.00\nFax: 05.00.00.00.01"), 0, 'L', false);
@@ -61,7 +61,7 @@ class pdf extends tFPDF
         $prixTotalHorsTaxes = 0;
 
         $datas = array();
-        for ($ij = 0; $ij < 50; $datas[] = array("ABCD", utf8_decode("Désignation de l'article $ij"), "10" . chr(128), "2", "20" . chr(128)), $prixTotalHorsTaxes += 20, $ij++);
+        for ($ij = 0; $ij < 5; $datas[] = array("ABCD", utf8_decode("Désignation de l'article $ij"), "10" . chr(128), "2", "20" . chr(128)), $prixTotalHorsTaxes += 20, $ij++);
 
         $header = array(utf8_decode('Réf'), utf8_decode('Désignation'), utf8_decode('Prix Unitaire HT'), utf8_decode('Qté'), utf8_decode('Prix Total HT'));
         $w = array(20, 102, 25, 20, 23);
@@ -103,7 +103,7 @@ class pdf extends tFPDF
         $this->SetY(-15);
         $this->SetFont('DejaVu', 'I', 8);
         $this->Cell(0, 4, utf8_decode('Page ' . $this->PageNo() . '/{nb}'), 0, 2, 'C');
-        $this->MultiCell(0, 4, utf8_decode("www.Crac-Design.com\n"), 0, 'C', false);
+        $this->MultiCell(0, 4, utf8_decode("tby-innovations.com\n"), 0, 'C', false);
     }
 }
 
