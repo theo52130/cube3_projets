@@ -1,35 +1,30 @@
 <div id="pageFactures">
 
-    <h3>Factures</h3>
+    <h3>Produit</h3>
 
-    <table border="1">
-        <tr>
-            <th>Facture ID</th>
-            <th>Date</th>
-            <th>Total</th>
-            <th>État</th>
-            <th>Produits</th>
-            <th>Actions</th>
-        </tr>
-        <?php foreach ($factureData as $facture): ?>
-            <tr>
-                <td><?php echo $facture['facture_id']; ?></td>
-                <td><?php echo $facture['date_creation']; ?></td>
-                <td><?php echo $facture['total']; ?></td>
-                <td><?php echo $facture['etat']; ?></td>
-                <td>
-                    <?php foreach ($facture['produits'] as $produit): ?>
-                        <p><?php echo $produit['description'] . ' - ' . $produit['prix_unitaire'] . ' - ' . $produit['quantite']; ?></p>
-                    <?php endforeach; ?>
-                </td>
-                <td>
-                    <form method="post">
-                        <button name="download_pdf" type="submit">Download PDF</button>
-                        <button name="download_csv" type="submit">Download CSV</button>
-                    </form>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
+    <?php
+    // Connexion à la base de données
+    $host = 'localhost'; // L'adresse du serveur de base de données
+    $dbname = 'nom_de_ta_base_de_donnees'; // Le nom de ta base de données
+    $username = 'ton_nom_utilisateur'; // Ton nom d'utilisateur MySQL
+    $password = 'ton_mot_de_passe'; // Ton mot de passe MySQL
+
+    try {
+        // Création d'une nouvelle connexion PDO
+        $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        // Requête SQL pour récupérer les produits
+        $sql = "SELECT * FROM produits";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+
+        // Récupération des résultats
+        $produits = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo "Erreur : " . $e->getMessage();
+    }
+    ?>
+
 
 </div>
