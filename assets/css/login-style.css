@@ -30,8 +30,8 @@ label {
 }
 
 input[type="email"], 
-input[type="password"] {
-    width: 95%;
+#password {
+    width: calc(100% - 50px); /* Ajuster la largeur pour inclure le bouton */
     padding: 10px;
     margin-bottom: 16px;
     border: 1px solid #ccc;
@@ -50,4 +50,23 @@ input[type="submit"] {
 
 input[type="submit"]:hover {
     background-color: #0056b3;
+}
+
+.password-container {
+    position: relative;
+}
+
+#togglePassword {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+#eyeIcon {
+    width: 24px;
+    height: 24px;
 }

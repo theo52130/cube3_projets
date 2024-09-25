@@ -57,14 +57,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <h2>Connexion</h2>
 
     <form action="login.php" method="post">
-        <label>Email:</label>
-        <input type="email" name="email" required><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br>
 
-        <label>Mot de passe:</label>
-        <input type="password" name="password" required><br>
+        <label for="password">Mot de passe:</label>
+        <div class="password-container">
+            <input type="password" id="password" name="password" placeholder="Entrez votre mot de passe">
+            <button type="button" id="togglePassword" aria-label="Afficher/Masquer le mot de passe">
+                <img src="./img/visibility_close.svg" alt="Afficher le mot de passe" id="eyeIcon">
+            </button>
+        </div>
 
         <input type="submit" value="Se connecter">
     </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const passwordInput = document.getElementById('password');
+            const togglePasswordButton = document.getElementById('togglePassword');
+            const eyeIcon = document.getElementById('eyeIcon');
+
+            togglePasswordButton.addEventListener('click', () => {
+                // Toggle the type attribute
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    eyeIcon.src = './img/visibility_open.svg'; // Change the icon to show the password is visible
+                } else {
+                    passwordInput.type = 'password';
+                    eyeIcon.src = './img/visibility_close.svg'; // Change the icon to hide the password
+                }
+            });
+        });
+    </script>
 
 </body>
 
