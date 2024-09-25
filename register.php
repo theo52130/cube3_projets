@@ -50,13 +50,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <h2>Inscription Compte</h2>
     <form action="register.php" method="post">
-        <label>Nom:</label>
+        <label>Nom*:</label>
         <input type="text" name="nom" required><br>
         
-        <label>Email:</label>
+        <label>Email*:</label>
         <input type="email" name="email" required><br>
 
-        <label>Adresse:</label>
+        <label>Adresse*:</label>
         <input type="text" name="adresse" required><br>
 
         <label>Email Entreprise (optionnel):</label>
@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <label>SIRET (optionnel):</label>
         <input type="text" name="siret"><br>
 
-        <label>Mot de passe:</label>
+        <label>Mot de passe*:</label>
         <input type="password" name="password" required><br>
 
         <label>Rôle:</label>
