@@ -1,7 +1,7 @@
 <div id="pageFactures">
 
     <h3>Factures</h3>
-
+    <!-- 
     <table border="1">
         <tr>
             <th>Facture ID</th>
@@ -30,6 +30,7 @@
                 </td>
             </tr>
         <?php endforeach; ?>
-    </table>
+    </table> 
+-->
 
 </div>

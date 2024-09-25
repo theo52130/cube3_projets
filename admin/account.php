@@ -88,9 +88,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['action'] == 'update') {
 
                 <div id="col-2">
                     <label>Email Entreprise:</label>
-                    <input type="email" name="email_entreprise" value="<?php echo htmlspecialchars($row['email_entreprise'] ?? ''); ?>"><br>
+                    <input type="email" placeholder="Necessaire si entreprise" name="email_entreprise" value="<?php echo htmlspecialchars($row['email_entreprise'] ?? ''); ?>"><br>
                     <label>SIRET:</label>
-                    <input type="text" name="siret" value="<?php echo htmlspecialchars($row['siret'] ?? ''); ?>" pattern="\d{14}" title="SIRET doit être un numéro de 14 chiffres"><br>
+                    <input type="text" placeholder="XXX XXX XXX XXXXX" name="siret" value="<?php echo htmlspecialchars($row['siret'] ?? ''); ?>" pattern="\d{14}" title="SIRET doit être un numéro de 14 chiffres"><br>
                     <label>Mot de passe:</label>
                     <input type="password" name="password" placeholder="Laissez vide pour ne pas changer" pattern=".{6,}" title="Mot de passe doit contenir au moins 6 caractères"><br>
                 </div>
