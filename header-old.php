@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -10,22 +9,22 @@
 
 <body>
     <header>
-        <h1>Control Tech</h1>
+        <h1>TBY Innovations</h1>
         <nav>
 
-        <?php
-                if (!isset($_SESSION['nom'])) { ?>
-                    <a href="login.php">Connexion</a>
-                    <a href="register.php">Inscription</a>
-                <?php
-                } else { ?>
-                    <a href="logout.php">Déconnexion</a>
-                <?php
-                }
-                ?>
+            <?php
+            if (!isset($_SESSION['nom'])) { ?>
+                <a href="login.php">Connexion</a>
+                <a href="register.php">Inscription</a>
+            <?php
+            } else { ?>
+                <a href="logout.php">Déconnexion</a>
+            <?php
+            }
+            ?>
 
             <a href="./admin/">Dashboard</a>
-            
+
         </nav>
     </header>
 
