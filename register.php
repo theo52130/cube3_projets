@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
 
-    <h2>Inscription Compte</h2>
+    <h2>Creation Compte</h2>
     <form action="register.php" method="post">
         <label>*Nom :</label>
         <input type="text" name="nom" required><br>
@@ -75,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <option value="admin">Admin</option>
         </select><br>
 
-        <input type="submit" value="S'inscrire">
+        <input type="submit" value="Creer le compte">
     </form>
 
 </body>

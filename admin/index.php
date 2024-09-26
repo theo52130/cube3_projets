@@ -29,11 +29,11 @@ $result = mysqli_query($conn, $sql);
 
     <div id="containerAdmin">
         <h2 id="customWelcome">Bienvenue, <?php echo htmlspecialchars($_SESSION['nom']); ?> !</h2>
+        <div class="titre-compte-list">
+            <h3>Listes des comptes : </h3>
 
-        <h3>Listes des comptes</h3>
-
-        <a href="../register.php" class="btn add-btn">ADD</a>
-
+            <a href="../register.php" class="btn add-btn">ADD</a>
+        </div>
         <!-- Tableau des comptes -->
         <table>
             <thead>
