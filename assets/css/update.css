@@ -18,12 +18,14 @@ body {
 }
 
 #table-1 {
+    width: 650px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
 }
 
 #col-1, #col-2 {
+    width: 46%;
     margin: 10px;
 }
 

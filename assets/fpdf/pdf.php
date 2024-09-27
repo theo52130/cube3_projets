@@ -14,7 +14,7 @@ class pdf extends FPDF
     function __construct()
     {
         parent::__construct();
-        $this->SetCreator("Damien BARRERE, www.crac-design.com");
+        $this->SetCreator("www.tby-Innovations.com");
     }
 
     // En-tête de la facture
@@ -25,20 +25,20 @@ class pdf extends FPDF
         $this->SetFont('Arial', 'B', 12);
         $this->SetTextColor(0, 0, 200);
         $this->SetXY(10, 30);
-        $this->Cell(50, 6, "www.Crac-Design.com", 0, 2, '', false);
+        $this->Cell(50, 6, "www.tbyInnovations.com", 0, 2, '', false);
         $this->SetFont('Arial', '', 12);
         $this->SetTextColor(0, 0, 0);
         $this->MultiCell(50, 5, "Adresse de l'entreprise\nCP VILLE\nTel: 05.00.00.00.00\nFax: 05.00.00.00.01", 0, 'L', false);
 
         // Informations Facture
-        $this->SetXY(60, 30);
+        $this->SetXY(65, 30);
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 15);
         $this->Cell(140, 6, "FACTURE", 1, 2, 'C', true);
         $this->SetFont('Arial', '', 12);
-        $this->SetXY(60, 38);
-        $this->MultiCell(130, 5, "Facture n° : Votre numéro de facture\nDate de commande : " . date("m.d.y") . "\nMode de paiement : Carte Bancaire", '', 'L', false);
-        $this->SetTitle("Facture n° : Votre numéro de facture");
+        $this->SetXY(65, 38);
+        $this->MultiCell(130, 5, "Facture numero : 0\nDate de commande : " . date("d.m.y"), '', 'L', false);
+        $this->SetTitle("Facture numero : Votre numéro de facture");
 
         // Adresse de Facturation
         $this->SetXY(10, 60);
@@ -46,7 +46,7 @@ class pdf extends FPDF
         $this->SetFont('Arial', 'B', 12);
         $this->Cell(90, 6, "Adresse de facturation", 1, 2, 'C', true);
         $this->SetFont('Arial', '', 12);
-        $this->MultiCell(90, 5, "Client NOM Prénom\nAdresse 1\nAdresse 2\nCode Postal Ville", 'LRB', 'L', false);
+        $this->MultiCell(90, 5, "Client NOM Prenom\nAdresse 1\nAdresse 2\nCode Postal Ville", 'LRB', 'L', false);
         $position = $this->getY();
 
         // Adresse de livraison
@@ -55,7 +55,7 @@ class pdf extends FPDF
         $this->SetFont('Arial', 'B', 12);
         $this->Cell(90, 6, "Adresse de livraison", 1, 2, 'C', true);
         $this->SetFont('Arial', '', 12);
-        $this->MultiCell(90, 5, "Livraison à l'adresse de facturation", 'LRB', 'L', false);
+        $this->MultiCell(90, 5, "Livraison a l'adresse de facturation", 'LRB', 'L', false);
 
         if ($this->getY() > $position) {
             $position = $this->getY();
@@ -77,9 +77,9 @@ class pdf extends FPDF
         }
 
         // Tableau contenant les titres des colonnes
-        $header = array('Réf', 'Désignation', 'Prix Unitaire HT', 'Qté', 'Prix Total HT');
+        $header = array('Ref', 'Designation', 'Prix Unitaire HT', 'Qte', 'Prix Total HT');
         // Tableau contenant la largeur des colonnes
-        $w = array(20, 102, 25, 20, 23);
+        $w = array(20, 88, 34, 20, 28);
         // Tableau contenant le centrage des colonnes
         $al = array('C', 'L', 'C', 'C', 'C');
 
@@ -94,7 +94,7 @@ class pdf extends FPDF
         $this->Cell(19, 6, $prixTotalHorsTaxes . chr(128), 1, 2, 'C');
 
         $this->setX(108);
-        $this->Cell(74, 6, "TVA à " . (TVA * 100) . " %", 1, 0, 'L');
+        $this->Cell(74, 6, "TVA a " . (TVA * 100) . " %", 1, 0, 'L');
         $totalTVA = $prixTotalHorsTaxes * TVA;
         $this->Cell(19, 6, $totalTVA . chr(128), 1, 2, 'C');
 
@@ -132,7 +132,7 @@ class pdf extends FPDF
         $this->SetFont('Arial', 'I', 8);
         // Numéro de page
         $this->Cell(0, 4, 'Page ' . $this->PageNo() . '/{nb}', 0, 2, 'C');
-        $this->MultiCell(0, 4, "www.Crac-Design.com\n", 0, 'C', false);
+        $this->MultiCell(0, 4, "www.tby-Innovations.com\n", 0, 'C', false);
     }
 }
 

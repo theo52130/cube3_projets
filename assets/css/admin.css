@@ -16,6 +16,8 @@ header {
     position: sticky;
     top: 0;
     width: 100%;
+    margin: 0;
+    border: none;
 }
 
 header h1 {
@@ -53,7 +55,7 @@ nav a:hover {
     margin: 20px auto;
     width: 90%;
     max-width: 1200px;
-    background: #fff;
+    background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

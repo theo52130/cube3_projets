@@ -32,7 +32,7 @@ $result = mysqli_query($conn, $sql);
         <div class="titre-compte-list">
             <h3>Listes des comptes : </h3>
 
-            <a href="../register.php" class="btn add-btn">ADD</a>
+            <a href="./register.php" class="btn add-btn">ADD</a>
         </div>
         <!-- Tableau des comptes -->
         <table>

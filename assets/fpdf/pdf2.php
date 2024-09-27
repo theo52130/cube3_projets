@@ -1,12 +1,12 @@
 <?php
-// Inclusion de la librairie TFPDF
-include "tfpdf.php";
+// Inclusion de la librairie FPDF
+include "fpdf.php";
 define("TVA", 0.196);
 
 /**
- * Classe PDF hérite de TFPDF, permet de générer des fichiers PDF
+ * Classe PDF hérite de FPDF, permet de générer des fichiers PDF
  */
-class pdf extends TFPDF
+class pdf extends FPDF
 {
     /**
      * Constructeur
@@ -15,8 +15,6 @@ class pdf extends TFPDF
     {
         parent::__construct();
         $this->SetCreator("www.tby-Innovations.com");
-        $this->AddFont('Courier', '', 'Courier.php'); // Ajout de la police
-        $this->SetFont('Courier', '', 12); // Définir la police par défaut
     }
 
     // En-tête de la facture
@@ -24,20 +22,20 @@ class pdf extends TFPDF
     {
         $position = 0;
         // Adresse
-        $this->SetFont('Courier', 'B', 12);
+        $this->SetFont('Arial', 'B', 12);
         $this->SetTextColor(0, 0, 200);
         $this->SetXY(10, 30);
         $this->Cell(50, 6, "www.tbyInnovations.com", 0, 2, '', false);
-        $this->SetFont('Courier', '', 12);
+        $this->SetFont('Arial', '', 12);
         $this->SetTextColor(0, 0, 0);
         $this->MultiCell(50, 5, "Adresse de l'entreprise\nCP VILLE\nTel: 05.00.00.00.00\nFax: 05.00.00.00.01", 0, 'L', false);
 
         // Informations Facture
         $this->SetXY(65, 30);
         $this->SetFillColor(200, 200, 200);
-        $this->SetFont('Courier', 'B', 15);
+        $this->SetFont('Arial', 'B', 15);
         $this->Cell(140, 6, "FACTURE", 1, 2, 'C', true);
-        $this->SetFont('Courier', '', 12);
+        $this->SetFont('Arial', '', 12);
         $this->SetXY(65, 38);
         $this->MultiCell(130, 5, "Facture numéro : " . $facture['id'] . "\nDate de création : " . date("d.m.y", strtotime($facture['date_creation'])), '', 'L', false);
         $this->SetTitle("Facture numéro : " . $facture['id']);
@@ -45,18 +43,18 @@ class pdf extends TFPDF
         // Adresse de Facturation
         $this->SetXY(10, 60);
         $this->SetFillColor(200, 200, 200);
-        $this->SetFont('Courier', 'B', 12);
+        $this->SetFont('Arial', 'B', 12);
         $this->Cell(90, 6, "Adresse de facturation", 1, 2, 'C', true);
-        $this->SetFont('Courier', '', 12);
+        $this->SetFont('Arial', '', 12);
         $this->MultiCell(90, 5, "Client: " . $compte['nom'] . "\n" . $compte['adresse'] . "\n" . (!empty($compte['adresse_entreprise']) ? $compte['adresse_entreprise'] . "\n" : "") . "Code Postal Ville", 'LRB', 'L', false);
         $position = $this->getY();
 
         // Adresse de livraison
         $this->SetXY(110, 60);
         $this->SetFillColor(200, 200, 200);
-        $this->SetFont('Courier', 'B', 12);
+        $this->SetFont('Arial', 'B', 12);
         $this->Cell(90, 6, "Adresse de livraison", 1, 2, 'C', true);
-        $this->SetFont('Courier', '', 12);
+        $this->SetFont('Arial', '', 12);
         $this->MultiCell(90, 5, "Livraison à l'adresse de facturation", 'LRB', 'L', false);
 
         if ($this->getY() > $position) {
@@ -83,14 +81,14 @@ class pdf extends TFPDF
         $al = array('C', 'L', 'C', 'C', 'C');
 
         // Impression des entêtes de colonnes
-        $this->SetFont('Courier', 'B', 12);
+        $this->SetFont('Arial', 'B', 12);
         for ($i = 0; $i < count($header); $i++) {
             $this->Cell($w[$i], 7, $header[$i], 1, 0, $al[$i]);
         }
         $this->Ln();
 
         // Impression des lignes de la table
-        $this->SetFont('Courier', '', 12);
+        $this->SetFont('Arial', '', 12);
         foreach ($produits as $produit) {
             // Vérifiez que les données nécessaires existent
             if (!isset($produit['id'], $produit['description'], $produit['prix_unitaire'], $produit['quantite'])) {
@@ -125,18 +123,19 @@ class pdf extends TFPDF
         $this->Cell(19, 6, number_format($prixTotalHorsTaxes + $totalTVA, 2, ',', ' ') . " €", 1, 2, 'C');
     }
 
-    // Méthode pour générer la table des articles
+
+    // Méthode manquante pour générer la table des articles
     function table($header, $w, $al, $datas)
     {
         // Impression des entêtes de colonnes
-        $this->SetFont('Courier', 'B', 12);
+        $this->SetFont('Arial', 'B', 12);
         for ($i = 0; $i < count($header); $i++) {
             $this->Cell($w[$i], 7, $header[$i], 1, 0, $al[$i]);
         }
         $this->Ln();
 
         // Impression des lignes de la table
-        $this->SetFont('Courier', '', 12);
+        $this->SetFont('Arial', '', 12);
         foreach ($datas as $row) {
             for ($i = 0; $i < count($row); $i++) {
                 $this->Cell($w[$i], 6, $row[$i], 1, 0, $al[$i]);
@@ -150,14 +149,13 @@ class pdf extends TFPDF
     {
         // Positionnement à 1,5 cm du bas
         $this->SetY(-15);
-        // Police Courier italique 8
-        $this->SetFont('Courier', 'I', 8);
+        // Police Arial italique 8
+        $this->SetFont('Arial', 'I', 8);
         // Numéro de page
         $this->Cell(0, 4, 'Page ' . $this->PageNo() . '/{nb}', 0, 2, 'C');
         $this->MultiCell(0, 4, "www.tby-Innovations.com\n", 0, 'C', false);
     }
 }
-
 require '../../config.php';
 
 // Vérifiez si l'ID est défini et valide
@@ -209,7 +207,6 @@ if (isset($_GET['id'])) {
         die('Aucun produit trouvé.');
     }
 }
-
 // Instanciation de la classe
 $pdf = new pdf();
 $pdf->AliasNbPages();

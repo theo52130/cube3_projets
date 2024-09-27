@@ -1,27 +1,16 @@
 <?php
-// Inclure le fichier de configuration pour la connexion à la base de données
-include '../config.php';
+include "../config.php";
 
-// Récupérer les produits
-$sql_produits = "SELECT * FROM produits";
-$result_produits = $conn->query($sql_produits);
-
-if ($result_produits === false) {
-    die("Erreur de requête produits : " . $conn->error);
-}
-
-$produits = [];
-if ($result_produits->num_rows > 0) {
-    while ($row = $result_produits->fetch_assoc()) {
-        $produits[$row['id']] = $row;
-    }
-}
-
-// Récupérer les factures et leurs produits associés avec les informations du client
 $sql_factures = "
-    SELECT f.id AS facture_id, f.date_creation, f.total, f.etat, c.nom AS client_nom, c.email AS client_email, 
-           c.adresse AS client_adresse, c.email_entreprise, c.siret, p.id AS produit_id, p.description, p.prix_unitaire, 
-           fp.quantite
+    SELECT 
+        f.id AS facture_id, 
+        f.date_creation, 
+        f.total, 
+        f.etat, 
+        c.email AS client_email, 
+        p.description AS produit_description, 
+        p.prix_unitaire, 
+        fp.quantite
     FROM factures f
     LEFT JOIN comptes c ON f.client_id = c.id
     LEFT JOIN factures_produits fp ON f.id = fp.facture_id
@@ -32,37 +21,39 @@ $sql_factures = "
 $result_factures = $conn->query($sql_factures);
 
 if ($result_factures === false) {
-    die("Erreur de requête factures : " . $conn->error);
+    die("Erreur de requête : " . $conn->error);
 }
 
+// Organiser les factures et produits associés dans un tableau
 $factures = [];
 while ($row = $result_factures->fetch_assoc()) {
     $facture_id = $row['facture_id'];
+
+    // Si la facture n'a pas encore été ajoutée, on l'ajoute
     if (!isset($factures[$facture_id])) {
         $factures[$facture_id] = [
             'date_creation' => $row['date_creation'],
             'total' => $row['total'],
             'etat' => $row['etat'],
-            'client_nom' => $row['client_nom'],
             'client_email' => $row['client_email'],
-            'client_adresse' => $row['client_adresse'],
-            'email_entreprise' => $row['email_entreprise'],
-            'siret' => $row['siret'],
             'produits' => []
         ];
     }
-    if ($row['produit_id']) {
+
+    // Ajouter les produits à la facture correspondante
+    if ($row['produit_description']) {
         $factures[$facture_id]['produits'][] = [
-            'description' => $row['description'],
+            'description' => $row['produit_description'],
             'prix_unitaire' => $row['prix_unitaire'],
             'quantite' => $row['quantite']
         ];
     }
 }
 
-// Fermer la connexion à la base de données
 $conn->close();
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -98,17 +89,29 @@ $conn->close();
                         <td><?php echo htmlspecialchars(number_format($facture['total'], 2)); ?> €</td>
                         <td><?php echo htmlspecialchars($facture['etat']); ?></td>
                         <td>
-
-                            <!-- <?php foreach ($facture['produits'] as $produit): ?>
-                                            <tr>
-                                                <td><?php echo htmlspecialchars($produit['description']); ?></td>
-                                                <td><?php echo htmlspecialchars(number_format($produit['prix_unitaire'], 2)); ?> €</td>
-                                                <td><?php echo htmlspecialchars($produit['quantite']); ?></td>
-                                                <td><?php echo htmlspecialchars(number_format($produit['prix_unitaire'] * $produit['quantite'], 2)); ?> €</td>
-                                            </tr>
-                                        <?php endforeach; ?> -->
+                            <a href="../assets/fpdf/pdf2.php?id=<?php echo htmlspecialchars($facture_id); ?>" class="btn pdf-btn">PDF -></a>
                         </td>
                     </tr>
+                </tbody>
+            </table>
+
+            <h2>Produits Associés :</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Prix Unitaire</th>
+                        <th>Quantité</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($facture['produits'] as $produit): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($produit['description']); ?></td>
+                            <td><?php echo htmlspecialchars(number_format($produit['prix_unitaire'], 2)); ?> €</td>
+                            <td><?php echo htmlspecialchars($produit['quantite']); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         <?php endforeach; ?>

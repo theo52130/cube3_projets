@@ -4,6 +4,12 @@ require('./config.php');
 // Démarrer la session en haut de la page
 session_start();
 
+if (isset($_SESSION['nom']) || isset($_SESSION['id'])) {
+    header("Location: redirection.php");
+    exit();
+}
+
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Utilisation des requêtes préparées pour éviter les injections SQL
     $email = $_POST['email'];
