@@ -105,6 +105,8 @@ $result = mysqli_query($conn, $sql);
             }
         }
     </script>
+
+    <?php require './footer.php'; ?>
 </body>
 
 </html>
