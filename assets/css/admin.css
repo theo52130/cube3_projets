@@ -67,22 +67,25 @@ nav a:hover {
 
 .titre-compte-list {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start; /* Alignement à gauche */
     align-items: center;
-    padding: 10px;
-    gap: 20px;
+    padding: 10px 0;
 }
 
 .titre-compte-list h3 {
+    margin-right: auto; /* Pour forcer le titre à gauche */
     margin: 0;
+}
+
+.titre-compte-list .btn {
+    margin-left: 20px; /* Espacement pour le bouton "ADD" */
 }
 
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin: 20px 0;
+    margin: 20px auto;
 }
 
 th, td {
@@ -110,10 +113,15 @@ tr:hover {
     border: gray 1px solid;
     padding: 3px 5px;
     border-radius: 7px;
+    color: white;
 }
 
 .add-btn {
-    background-color: #007bff;
+    background-color: blue;
+}
+
+.add-btn:hover {
+    background-color: #3844ee;
 }
 
 .update-btn {

@@ -66,3 +66,33 @@ p {
     color: #666;
     margin: 10px 0;
 }
+
+.btn.create-factures-btn {
+    display: inline-block;
+    margin: 10px 0;
+    padding: 10px 15px;
+    background-color: blue;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.btn.create-factures-btn:hover {
+    background-color: #3844ee;
+}
+
+.details-btn {
+    background-color: gray;
+}
+
+.pdf-btn {
+    background-color: gray;
+}
+
+.csv-btn {
+    background-color: gray;
+}
+
+.details-btn:hover, .pdf-btn:hover, .csv-btn:hover {
+    background-color: rgb(160, 157, 157);
+}

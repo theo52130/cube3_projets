@@ -1,7 +1,22 @@
 <?php
+session_start();
+
+if (
+    !isset($_SESSION['nom']) ||
+    !(
+        $_SESSION['role'] == 'admin' ||
+        $_SESSION['role'] == 'employer' ||
+        $_SESSION['user_id'] == $_SESSION['client_id']
+    )
+) {
+    header("Location: ../login.php");
+    exit();
+}
+
 // Inclusion de la librairie FPDF
-include "fpdf.php";
+include "../assets/fpdf/fpdf.php";
 define("TVA", 0.196);
+
 
 /**
  * Classe PDF hérite de FPDF, permet de générer des fichiers PDF
@@ -14,13 +29,12 @@ class pdf extends FPDF
     function __construct()
     {
         parent::__construct();
-        $this->SetCreator("www.tby-Innovations.com");
+        $this->SetCreator("www.tbyInnovations.com");
     }
 
     // En-tête de la facture
     function hautDePage($compte, $facture)
     {
-        $position = 0;
         // Adresse
         $this->SetFont('Arial', 'B', 12);
         $this->SetTextColor(0, 0, 200);
@@ -28,7 +42,7 @@ class pdf extends FPDF
         $this->Cell(50, 6, "www.tbyInnovations.com", 0, 2, '', false);
         $this->SetFont('Arial', '', 12);
         $this->SetTextColor(0, 0, 0);
-        $this->MultiCell(50, 5, "Adresse de l'entreprise\nCP VILLE\nTel: 05.00.00.00.00\nFax: 05.00.00.00.01", 0, 'L', false);
+        $this->MultiCell(50, 5, "7bis Av. Robert Schuman\n51100\nTel: 03.26.40.04.45", 0, 'L', false);
 
         // Informations Facture
         $this->SetXY(65, 30);
@@ -37,7 +51,7 @@ class pdf extends FPDF
         $this->Cell(140, 6, "FACTURE", 1, 2, 'C', true);
         $this->SetFont('Arial', '', 12);
         $this->SetXY(65, 38);
-        $this->MultiCell(130, 5, "Facture numéro : " . $facture['id'] . "\nDate de création : " . date("d.m.y", strtotime($facture['date_creation'])), '', 'L', false);
+        $this->MultiCell(130, 5, "Facture numero : " . $facture['id'] . "\nDate de creation : " . date("d.m.y", strtotime($facture['date_creation'])), '', 'L', false);
         $this->SetTitle("Facture numéro : " . $facture['id']);
 
         // Adresse de Facturation
@@ -46,7 +60,7 @@ class pdf extends FPDF
         $this->SetFont('Arial', 'B', 12);
         $this->Cell(90, 6, "Adresse de facturation", 1, 2, 'C', true);
         $this->SetFont('Arial', '', 12);
-        $this->MultiCell(90, 5, "Client: " . $compte['nom'] . "\n" . $compte['adresse'] . "\n" . (!empty($compte['adresse_entreprise']) ? $compte['adresse_entreprise'] . "\n" : "") . "Code Postal Ville", 'LRB', 'L', false);
+        $this->MultiCell(90, 5, "Client: " . $compte['nom'] . "\n" . $compte['adresse'] . "\n" . (!empty($compte['adresse_entreprise']) ? $compte['adresse_entreprise'] . "\n" : ""), 'LRB', 'L', false);
         $position = $this->getY();
 
         // Adresse de livraison
@@ -55,7 +69,7 @@ class pdf extends FPDF
         $this->SetFont('Arial', 'B', 12);
         $this->Cell(90, 6, "Adresse de livraison", 1, 2, 'C', true);
         $this->SetFont('Arial', '', 12);
-        $this->MultiCell(90, 5, "Livraison à l'adresse de facturation", 'LRB', 'L', false);
+        $this->MultiCell(90, 5, "Livraison e l'adresse de facturation", 'LRB', 'L', false);
 
         if ($this->getY() > $position) {
             $position = $this->getY();
@@ -66,7 +80,6 @@ class pdf extends FPDF
     // Préparation de la génération de la table
     function tableArticles($produits)
     {
-        $position = 0;
         $prixTotalHorsTaxes = 0;
 
         // Vérifiez que $produits n'est pas vide
@@ -76,7 +89,7 @@ class pdf extends FPDF
         }
 
         // Tableau contenant les titres des colonnes
-        $header = array('Ref', 'Désignation', 'Prix Unitaire HT', 'Qte', 'Prix Total HT');
+        $header = array('Ref', 'Designation', 'Prix Unitaire HT', 'Qte', 'Prix Total HT');
         $w = array(20, 88, 34, 20, 28);
         $al = array('C', 'L', 'C', 'C', 'C');
 
@@ -100,9 +113,9 @@ class pdf extends FPDF
 
             $this->Cell($w[0], 6, $produit['id'], 1);
             $this->Cell($w[1], 6, $produit['description'], 1);
-            $this->Cell($w[2], 6, number_format($produit['prix_unitaire'], 2, ',', ' ') . " €", 1);
+            $this->Cell($w[2], 6, number_format($produit['prix_unitaire'], 2, ',', ' ') . " euros", 1);
             $this->Cell($w[3], 6, $produit['quantite'], 1);
-            $this->Cell($w[4], 6, number_format($prixTotal, 2, ',', ' ') . " €", 1);
+            $this->Cell($w[4], 6, number_format($prixTotal, 2, ',', ' ') . " euros", 1);
             $this->Ln();
         }
 
@@ -110,38 +123,17 @@ class pdf extends FPDF
         $this->SetY($this->GetY() + 5);
 
         $this->setX(108);
-        $this->Cell(74, 6, "Total Hors Taxes", 1, 0, 'L');
-        $this->Cell(19, 6, number_format($prixTotalHorsTaxes, 2, ',', ' ') . " €", 1, 2, 'C');
+        $this->Cell(54, 6, "Total Hors Taxes", 1, 0, 'L');
+        $this->Cell(39, 6, number_format($prixTotalHorsTaxes, 2, ',', ' ') . " euros", 1, 2, 'C');
 
         $this->setX(108);
-        $this->Cell(74, 6, "TVA à " . (TVA * 100) . " %", 1, 0, 'L');
+        $this->Cell(54, 6, "TVA à " . (TVA * 100) . " %", 1, 0, 'L');
         $totalTVA = $prixTotalHorsTaxes * TVA;
-        $this->Cell(19, 6, number_format($totalTVA, 2, ',', ' ') . " €", 1, 2, 'C');
+        $this->Cell(39, 6, number_format($totalTVA, 2, ',', ' ') . " euros", 1, 2, 'C');
 
         $this->setX(108);
-        $this->Cell(74, 6, "Total TTC", 1, 0, 'L');
-        $this->Cell(19, 6, number_format($prixTotalHorsTaxes + $totalTVA, 2, ',', ' ') . " €", 1, 2, 'C');
-    }
-
-
-    // Méthode manquante pour générer la table des articles
-    function table($header, $w, $al, $datas)
-    {
-        // Impression des entêtes de colonnes
-        $this->SetFont('Arial', 'B', 12);
-        for ($i = 0; $i < count($header); $i++) {
-            $this->Cell($w[$i], 7, $header[$i], 1, 0, $al[$i]);
-        }
-        $this->Ln();
-
-        // Impression des lignes de la table
-        $this->SetFont('Arial', '', 12);
-        foreach ($datas as $row) {
-            for ($i = 0; $i < count($row); $i++) {
-                $this->Cell($w[$i], 6, $row[$i], 1, 0, $al[$i]);
-            }
-            $this->Ln();
-        }
+        $this->Cell(54, 6, "Total TTC", 1, 0, 'L');
+        $this->Cell(39, 6, number_format($prixTotalHorsTaxes + $totalTVA, 2, ',', ' ') . " euros", 1, 2, 'C');
     }
 
     // Pied de page
@@ -156,11 +148,12 @@ class pdf extends FPDF
         $this->MultiCell(0, 4, "www.tby-Innovations.com\n", 0, 'C', false);
     }
 }
-require '../../config.php';
+
+require '../config.php';
 
 // Vérifiez si l'ID est défini et valide
-if (isset($_GET['id'])) {
-    $idFacture = intval($_GET['id']);
+if (isset($_POST['id'])) {
+    $idFacture = intval($_POST['id']);
 
     // Récupérer les informations de la facture
     $queryFacture = "SELECT * FROM factures WHERE id = ?";
@@ -184,17 +177,11 @@ if (isset($_GET['id'])) {
     $compte = $resultClient->fetch_assoc();
     $stmtClient->close();
 
-    // Vérifiez que le compte a été trouvé
-    if (!$compte) {
-        die('Aucun client trouvé.');
-    }
-
     // Récupérer les produits associés à la facture
-    $queryProduits = "
-        SELECT p.*, fp.quantite 
-        FROM produits p
-        JOIN factures_produits fp ON p.id = fp.produit_id
-        WHERE fp.facture_id = ?";
+    $queryProduits = "SELECT p.id, p.description, p.prix_unitaire, fp.quantite
+                      FROM produits p
+                      JOIN factures_produits fp ON p.id = fp.produit_id
+                      WHERE fp.facture_id = ?";
     $stmtProduits = $conn->prepare($queryProduits);
     $stmtProduits->bind_param("i", $idFacture);
     $stmtProduits->execute();
@@ -202,15 +189,17 @@ if (isset($_GET['id'])) {
     $produits = $resultProduits->fetch_all(MYSQLI_ASSOC);
     $stmtProduits->close();
 
-    // Vérifiez que des produits ont été trouvés
-    if (empty($produits)) {
-        die('Aucun produit trouvé.');
-    }
+    // Envoyer les en-têtes HTTP pour afficher le PDF inline
+    header('Content-Type: application/pdf');
+    header('Content-Disposition: inline; filename="facture_' . $facture['id'] . '.pdf"');
+
+    // Génération du PDF
+    $pdf = new pdf();
+    $pdf->AliasNbPages();
+    $pdf->AddPage();
+    $pdf->hautDePage($compte, $facture);
+    $pdf->tableArticles($produits);
+    $pdf->Output("I", "facture_" . $facture['id'] . ".pdf"); // Changer "D" en "I" pour afficher dans le navigateur
+} else {
+    die('ID de facture manquant.');
 }
-// Instanciation de la classe
-$pdf = new pdf();
-$pdf->AliasNbPages();
-$pdf->AddPage();
-$pdf->hautDePage($compte, $facture);
-$pdf->tableArticles($produits);
-$pdf->Output();

@@ -4,7 +4,8 @@
 if (
     !isset($_SESSION['nom']) ||
     !(
-        $_SESSION['role'] == 'admin'
+        $_SESSION['role'] == 'admin' ||
+        $_SESSION['role'] == 'employer'
     )
 ) {
     header("Location: ../login.php");
@@ -80,8 +81,6 @@ $conn->close();
 <body>
     <div id="pageFactures">
         <h1>Liste des Factures et Produits Associés</h1>
-
-        <a href="./creer_facture.php" class="btn create-factures-btn">Créer une nouvelle facture</a>
 
         <?php foreach ($factures as $facture_id => $facture): ?>
             <table>

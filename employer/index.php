@@ -5,7 +5,8 @@ session_start();
 if (
     !isset($_SESSION['nom']) ||
     !(
-        $_SESSION['role'] == 'admin' || $_SESSION['role'] == 'client'
+        $_SESSION['role'] == 'admin' ||
+        $_SESSION['role'] == 'employer'
     )
 ) {
     header("Location: ../login.php");
@@ -15,8 +16,8 @@ if (
 // Connexion à la base de données
 require '../config.php';
 
-// Requête pour obtenir uniquement les comptes clients
-$sql = "SELECT * FROM comptes WHERE id = " . $_SESSION['user_id'];
+// Requête pour obtenir les données des comptes
+$sql = "SELECT * FROM comptes WHERE role = 'client'";
 $result = mysqli_query($conn, $sql);
 ?>
 
@@ -35,12 +36,13 @@ $result = mysqli_query($conn, $sql);
     <div id="containerAdmin">
         <h2 id="customWelcome">Bienvenue, <?php echo htmlspecialchars($_SESSION['nom']); ?> !</h2>
         <div class="titre-compte-list">
-            <h3>Listes de vos comptes : </h3>
+            <h3>Listes des comptes : </h3>
         </div>
-        <!-- Tableau des comptes clients -->
+        <!-- Tableau des comptes -->
         <table>
             <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Nom</th>
                     <th>Email</th>
                     <th>Adresse</th>
@@ -53,6 +55,7 @@ $result = mysqli_query($conn, $sql);
                 if (mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_assoc($result)) {
                         echo "<tr id='row-" . htmlspecialchars($row['id']) . "'>";
+                        echo "<td>" . htmlspecialchars($row['id']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['nom']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['email']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['adresse']) . "</td>";

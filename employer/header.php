@@ -9,9 +9,9 @@
 
 <body>
     <header>
-        <h1>TBY Innovations (Client)</h1>
+        <h1>TBY Innovations (Employer)</h1>
         <nav>
-            <a href="index.php">Dashboard</a>
+            <a href="account.php">Mon Compte</a>
             <a href="../logout.php">LogOut</a>
         </nav>
     </header>

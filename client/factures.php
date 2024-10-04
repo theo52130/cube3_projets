@@ -4,7 +4,8 @@
 if (
     !isset($_SESSION['nom']) ||
     !(
-        $_SESSION['role'] == 'admin'
+        $_SESSION['role'] == 'admin' ||
+        $_SESSION['role'] == 'client'
     )
 ) {
     header("Location: ../login.php");
@@ -13,6 +14,10 @@ if (
 
 include "../config.php";
 
+// Récupérer l'ID de l'utilisateur connecté
+$current_user_id = $_SESSION['user_id']; // Assurez-vous que c'est le bon nom de clé
+
+// Requête pour obtenir les factures du client connecté
 $sql_factures = "
     SELECT 
         f.id AS facture_id, 
@@ -27,10 +32,17 @@ $sql_factures = "
     LEFT JOIN comptes c ON f.client_id = c.id
     LEFT JOIN factures_produits fp ON f.id = fp.facture_id
     LEFT JOIN produits p ON fp.produit_id = p.id
+    WHERE f.client_id = ?
     ORDER BY f.id, p.id;
 ";
 
-$result_factures = $conn->query($sql_factures);
+// Préparer la requête
+$stmt = $conn->prepare($sql_factures);
+$stmt->bind_param("i", $current_user_id); // 'i' pour integer
+$stmt->execute();
+
+// Obtenir le résultat
+$result_factures = $stmt->get_result();
 
 if ($result_factures === false) {
     die("Erreur de requête : " . $conn->error);
@@ -62,9 +74,10 @@ while ($row = $result_factures->fetch_assoc()) {
     }
 }
 
+// Fermer la connexion
+$stmt->close();
 $conn->close();
 ?>
-
 
 
 <!DOCTYPE html>
@@ -81,7 +94,6 @@ $conn->close();
     <div id="pageFactures">
         <h1>Liste des Factures et Produits Associés</h1>
 
-        <a href="./creer_facture.php" class="btn create-factures-btn">Créer une nouvelle facture</a>
 
         <?php foreach ($factures as $facture_id => $facture): ?>
             <table>
