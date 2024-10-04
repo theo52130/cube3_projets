@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us</title>
+    <title>Nous contacter</title>
     <link rel="stylesheet" href="contact.css">
 </head>
 
 <body>
     <header>
-        <h1>Contact Us</h1>
+        <h1>Nous contacter</h1>
     </header>
     <main>
         <form action="send_contact.php" method="post">
