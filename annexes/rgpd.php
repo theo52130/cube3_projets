@@ -49,11 +49,25 @@
         </section>
         <section>
             <h2>Contact</h2>
-            <p>Pour toute question concernant vos données personnelles, veuillez nous contacter à l'adresse suivante : <a href="mailto:contact@votresite.com">contact@votresite.com</a></p>
+            <p>Pour toute question concernant vos données personnelles, veuillez nous contacter à l'adresse suivante : <a href="mailto:contact@tbyinnovations.com">contact@tbyinnovations.com</a></p>
+        </section>
+        <section>
+            <h2>1. Mentions Légales</h2>
+            <p><strong>Éditeur du site :</strong></p>
+            <p>Nom de l'entreprise : TBY INNOVATIONS<br>
+                Adresse : 7 bis avenue robert schuman 51100 Reims<br>
+                Téléphone : 0326400445<br>
+                Email : yassine.benseghir@viacesi.fr</p>
+
+            <p><strong>Directeur de la publication :</strong> TBY INNOVATIONS</p>
+
+            <p><strong>Hébergement :</strong></p>
+            <p>Le site est hébergé par LOCAL.<br>
+                Adresse : 7 bis avenue robert schuman 51100 Reims</p>
         </section>
     </main>
     <footer>
-        <p>&copy; 2023 Votre Société. Tous droits réservés.</p>
+        <p>&copy; 2024 Votre Société. Tous droits réservés.</p>
     </footer>
 </body>
 
