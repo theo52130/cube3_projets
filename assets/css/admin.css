@@ -10,11 +10,14 @@ body {
 header {
     background-color: #007bff;
     color: white;
-    padding: 20px;
+    padding-bottom: 20px;
+    padding-top: 20px;
     text-align: center;
     position: sticky;
     top: 0;
     width: 100%;
+    margin: 0;
+    border: none;
 }
 
 header h1 {
@@ -52,7 +55,7 @@ nav a:hover {
     margin: 20px auto;
     width: 90%;
     max-width: 1200px;
-    background: #fff;
+    background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -62,10 +65,27 @@ nav a:hover {
     margin-bottom: 20px;
 }
 
+.titre-compte-list {
+    display: flex;
+    justify-content: flex-start; /* Alignement à gauche */
+    align-items: center;
+    padding: 10px 0;
+}
+
+.titre-compte-list h3 {
+    margin-right: auto; /* Pour forcer le titre à gauche */
+    margin: 0;
+}
+
+.titre-compte-list .btn {
+    margin-left: 20px; /* Espacement pour le bouton "ADD" */
+}
+
+
 table {
     width: 100%;
     border-collapse: collapse;
-    margin: 20px 0;
+    margin: 20px auto;
 }
 
 th, td {
@@ -76,7 +96,6 @@ th, td {
 
 th {
     background-color: #007bff;
-    color: white;
     font-weight: bold;
 }
 
@@ -91,4 +110,25 @@ tr:hover {
 .btn {
     color: black;
     text-decoration: none;
+    border: gray 1px solid;
+    padding: 3px 5px;
+    border-radius: 7px;
+    color: white;
+}
+
+.add-btn {
+    background-color: blue;
+}
+
+.add-btn:hover {
+    background-color: #3844ee;
+}
+
+.update-btn {
+    background-color: orange;
+}
+
+.delete-btn {
+    background-color: red;
+    cursor: pointer;
 }

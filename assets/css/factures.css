@@ -1,0 +1,98 @@
+/* Styles globaux pour le corps */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Style pour les titres */
+h1, h3 {
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+h1 {
+    font-size: 20px;
+}
+
+h3 {
+    font-size: 16px;
+}
+
+/* Style pour les tableaux */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+    background-color: #fff;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+table th {
+    background-color: #f0f0f0;
+    font-weight: normal;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Style pour les produits dans les factures */
+.produits {
+    margin-top: 10px;
+}
+
+.produits table {
+    margin-top: 5px;
+}
+
+.produits th {
+    background-color: #e0e0e0;
+}
+
+/* Style pour les messages d'alerte */
+p {
+    font-size: 14px;
+    color: #666;
+    margin: 10px 0;
+}
+
+.btn.create-factures-btn {
+    display: inline-block;
+    margin: 10px 0;
+    padding: 10px 15px;
+    background-color: blue;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.btn.create-factures-btn:hover {
+    background-color: #3844ee;
+}
+
+.details-btn {
+    background-color: gray;
+}
+
+.pdf-btn {
+    background-color: gray;
+}
+
+.csv-btn {
+    background-color: gray;
+}
+
+.details-btn:hover, .pdf-btn:hover, .csv-btn:hover {
+    background-color: rgb(160, 157, 157);
+}

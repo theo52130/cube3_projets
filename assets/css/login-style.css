@@ -30,8 +30,8 @@ label {
 }
 
 input[type="email"], 
-input[type="password"] {
-    width: 95%;
+#password {
+    width: calc(100% - 50px); /* Ajuster la largeur pour inclure le bouton */
     padding: 10px;
     margin-bottom: 16px;
     border: 1px solid #ccc;
@@ -50,4 +50,32 @@ input[type="submit"] {
 
 input[type="submit"]:hover {
     background-color: #0056b3;
+}
+
+.password-container {
+    display: flex;
+    align-items: center;
+    position: relative; /* Ajouté pour positionner l'icône de manière absolue */
+}
+
+#password,
+#email {
+    flex: 1;
+    padding-right: 40px; /* Ajouté pour créer un espace pour l'icône */
+}
+
+#togglePassword {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: absolute; /* Positionné absolument pour se placer dans le champ de mot de passe */
+    right: 10px; /* Espacement depuis le bord droit */
+    top: 40%; /* Alignement vertical */
+    transform: translateY(-50%); /* Centre verticalement */
+    z-index: 1; /* Assure que l'icône est au-dessus du champ de texte */
+}
+
+#eyeIcon {
+    width: 20px;
+    height: 20px;
 }
