@@ -25,7 +25,7 @@ $result = mysqli_query($conn, $sql);
 
 <head>
     <meta charset="UTF-8">
-    <title>Admin</title>
+    <title>Dashboard Client</title>
     <link rel="stylesheet" href="../assets/css/admin.css">
 </head>
 
