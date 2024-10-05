@@ -13,7 +13,7 @@
         <nav>
             <a href="index.php">Accueil</a>
             <a href="account.php">Mon Compte</a>
-            <a href="../logout.php">LogOut</a>
+            <a href="../public/logout.php">LogOut</a>
         </nav>
     </header>
 

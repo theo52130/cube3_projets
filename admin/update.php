@@ -7,7 +7,7 @@ if (!isset($_SESSION['nom']) || $_SESSION['role'] != 'admin') {
     exit();
 }
 
-require '../config.php';
+require '../includes/config.php';
 
 // Récupérer les données du compte à mettre à jour
 if (isset($_GET['id'])) {

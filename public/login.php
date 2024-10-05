@@ -1,5 +1,5 @@
 <?php
-require('./config.php');
+require('../includes/config.php');
 
 // Démarrer la session en haut de la page
 session_start();
@@ -57,8 +57,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-
-
 <!DOCTYPE html>
 <html>
 
@@ -66,14 +64,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion</title>
-    <link rel="apple-touch-icon" sizes="180x180" href="./assets/logo/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="./assets/logo/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="./assets/logo/favicon-16x16.png">
-    <link rel="manifest" href="./assets/logo/site.webmanifest">
-    <link rel="mask-icon" href="./assets/logo/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/logo/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/logo/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/logo/favicon-16x16.png">
+    <link rel="manifest" href="../assets/logo/site.webmanifest">
+    <link rel="mask-icon" href="../assets/logo/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#2b5797">
     <meta name="theme-color" content="#ffffff">
-    <link rel="stylesheet" href="./assets/css/login-style.css">
+    <link rel="stylesheet" href="../assets/css/login-style.css">
 </head>
 
 <body>
@@ -88,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="password-container">
             <input type="password" id="password" name="password" placeholder="Entrez votre mot de passe">
             <button type="button" id="togglePassword" aria-label="Afficher/Masquer le mot de passe">
-                <img src="./assets/img/visibility_close.svg" alt="Afficher le mot de passe" id="eyeIcon">
+                <img src="../assets/img/visibility_close.svg" alt="Afficher le mot de passe" id="eyeIcon">
             </button>
         </div>
 

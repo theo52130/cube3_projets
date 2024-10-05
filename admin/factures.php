@@ -11,7 +11,7 @@ if (
     exit();
 }
 
-include "../config.php";
+include "../includes/config.php";
 
 $sql_factures = "
     SELECT 

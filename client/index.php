@@ -13,7 +13,7 @@ if (
 }
 
 // Connexion à la base de données
-require '../config.php';
+require '../includes/config.php';
 
 // Requête pour obtenir uniquement les comptes clients
 $sql = "SELECT * FROM comptes WHERE id = " . $_SESSION['user_id'];

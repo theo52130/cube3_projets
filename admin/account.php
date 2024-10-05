@@ -7,7 +7,7 @@ if (!isset($_SESSION['nom']) || $_SESSION['role'] != 'admin') {
     exit();
 }
 
-require '../config.php';
+require '../includes/config.php';
 
 // Récupérer les données du compte de l'utilisateur connecté
 $id = intval($_SESSION['user_id']);

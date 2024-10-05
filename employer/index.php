@@ -14,7 +14,7 @@ if (
 }
 
 // Connexion à la base de données
-require '../config.php';
+require '../includes/config.php';
 
 // Requête pour obtenir les données des comptes
 $sql = "SELECT * FROM comptes WHERE role = 'client'";

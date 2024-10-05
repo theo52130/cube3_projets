@@ -12,7 +12,7 @@ if (
     exit();
 }
 
-include "../config.php";
+include "../includes/config.php";
 
 // Récupérer l'ID de l'utilisateur connecté
 $current_user_id = $_SESSION['user_id']; // Assurez-vous que c'est le bon nom de clé

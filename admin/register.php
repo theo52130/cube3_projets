@@ -14,7 +14,7 @@ if (
 }
 
 // Connexion à la base de données
-require '../config.php';
+require '../includes/config.php';
 
 // Traitement de la demande de suppression
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] == 'delete') {
@@ -26,9 +26,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
         echo 'error';
     }
 }
-
-
-require '../config.php';
 
 // Traitement du formulaire d'inscription
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -47,9 +44,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
+    // Générer un token aléatoire
+    $token = bin2hex(random_bytes(50));
+
     // Préparer la requête SQL pour éviter l'injection SQL
-    $stmt = $conn->prepare("INSERT INTO comptes (nom, email, adresse, email_entreprise, siret, password, role) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssssss", $nom, $email, $adresse, $email_entreprise, $siret, $password, $role);
+    $stmt = $conn->prepare("INSERT INTO comptes (nom, email, adresse, email_entreprise, siret, password, role, token) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssssss", $nom, $email, $adresse, $email_entreprise, $siret, $password, $role, $token);
 
     if ($stmt->execute()) {
         // Redirection après inscription réussie
@@ -72,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
@@ -84,9 +84,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <?php require './header.php'; ?>
 
-    <h2>Creation Compte</h2>
+    <h2>Création de Compte</h2>
     <form action="register.php" method="post">
-        <label>*Prenom - Nom :</label>
+        <label>*Prénom - Nom :</label>
         <input type="text" name="nom" required><br>
 
         <label>*Email :</label>
@@ -111,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <option value="admin">Admin</option>
         </select><br>
 
-        <input type="submit" value="Creer le compte">
+        <input type="submit" value="Créer le compte">
     </form>
 
 </body>

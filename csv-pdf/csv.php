@@ -15,7 +15,7 @@ if (
 }
 
 // Connexion à la base de données
-require_once '../config.php';
+require_once '../includes/config.php';
 
 // Vérification de l'ID de la facture dans le POST
 if (isset($_POST['id'])) {

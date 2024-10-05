@@ -149,7 +149,7 @@ class pdf extends FPDF
     }
 }
 
-require '../config.php';
+require '../includes/config.php';
 
 // Vérifiez si l'ID est défini et valide
 if (isset($_POST['id'])) {

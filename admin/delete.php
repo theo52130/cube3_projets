@@ -8,7 +8,7 @@ if (!isset($_SESSION['nom']) || $_SESSION['role'] != 'admin') {
 }
 
 // Connexion à la base de données
-require '../config.php';
+require '../includes/config.php';
 
 // Traitement de la demande de suppression
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] == 'delete') {
