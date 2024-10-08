@@ -8,7 +8,7 @@ if (
         $_SESSION['role'] == 'client'
     )
 ) {
-    header("Location: ../login.php");
+    header("Location: ../public/login.php");
     exit();
 }
 

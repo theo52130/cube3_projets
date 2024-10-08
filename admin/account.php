@@ -3,7 +3,7 @@ session_start();
 
 // Vérification de la connexion
 if (!isset($_SESSION['nom']) || $_SESSION['role'] != 'admin') {
-    header("Location: ../login.php");
+    header("Location: ../public/login.php");
     exit();
 }
 

@@ -7,7 +7,7 @@ if (!isset($_SESSION['nom']) || ($_SESSION['role'] != 'admin' && $_SESSION['role
     exit();
 }
 
-require '../includes/config.php';
+header("Location: ../public/login.php");
 
 // Récupérer les données du compte de l'utilisateur connecté
 $id = intval($_SESSION['user_id']);

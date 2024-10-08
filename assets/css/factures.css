@@ -67,6 +67,16 @@ p {
     margin: 10px 0;
 }
 
+.btn {
+    color: black;
+    text-decoration: none;
+    border: gray 1px solid;
+    padding: 3px 5px;
+    border-radius: 7px;
+    color: white;
+    cursor: pointer;
+}
+
 .btn.create-factures-btn {
     display: inline-block;
     margin: 10px 0;
@@ -82,17 +92,25 @@ p {
 }
 
 .details-btn {
-    background-color: gray;
+    background-color: rgb(101, 101, 243);
+    padding: 10px 15px;
 }
 
 .pdf-btn {
-    background-color: gray;
+    background-color: #3844ee;
+    padding: 10px 15px;
 }
 
 .csv-btn {
-    background-color: gray;
+    display: inline-block;
+    margin: 10px 0;
+    padding: 10px 15px;
+    background-color: blue;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
 }
 
-.details-btn:hover, .pdf-btn:hover, .csv-btn:hover {
-    background-color: rgb(160, 157, 157);
+.pdf-btn:hover, .csv-btn:hover {
+    background-color: #3844ee;
 }

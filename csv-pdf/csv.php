@@ -1,76 +1,78 @@
 <?php
-
 session_start();
 
-if (
-    !isset($_SESSION['nom']) ||
-    !(
-        $_SESSION['role'] == 'admin' ||
-        $_SESSION['role'] == 'employer' ||
-        $_SESSION['user_id'] == $_SESSION['client_id']
-    )
-) {
-    header("Location: ../login.php");
+// Vérification de la connexion et du rôle
+if (!isset($_SESSION['nom']) || $_SESSION['role'] != 'admin') {
+    header("Location: ../public/login.php");
     exit();
 }
 
-// Connexion à la base de données
-require_once '../includes/config.php';
+include "../includes/config.php";
 
-// Vérification de l'ID de la facture dans le POST
-if (isset($_POST['id'])) {
+$sql_factures = "
+    SELECT 
+        f.id AS facture_id, 
+        f.date_creation, 
+        f.total, 
+        f.etat, 
+        c.email AS client_email, 
+        p.description AS produit_description, 
+        p.prix_unitaire, 
+        fp.quantite
+    FROM factures f
+    LEFT JOIN comptes c ON f.client_id = c.id
+    LEFT JOIN factures_produits fp ON f.id = fp.facture_id
+    LEFT JOIN produits p ON fp.produit_id = p.id
+    ORDER BY f.id, p.id;
+";
 
-    $facture_id = intval($_POST['id']);
+$result_factures = $conn->query($sql_factures);
 
-    // Récupération de la facture en fonction de l'ID
-    $query = "
-        SELECT f.id AS Ref, c.email AS Email, f.date_creation AS Date, f.total AS Total, f.etat AS État 
-        FROM factures f 
-        JOIN comptes c ON f.client_id = c.id 
-        WHERE f.id = $facture_id";
-
-    $result = mysqli_query($conn, $query);
-
-    // Vérification de la présence des données
-    if (mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result);
-
-        // Formatage des données en CSV
-        $csv_data = array();
-        $csv_data[] = '"Ref","Email","Date","Total","État"';
-        $csv_data[] = '"' . implode('","', $row) . '"';
-
-        // Ajout des produits associés à la facture
-        $query_produits = "
-            SELECT p.description AS Description, fp.quantite AS Quantité, p.prix_unitaire AS Prix
-            FROM factures_produits fp
-            JOIN produits p ON fp.produit_id = p.id
-            WHERE fp.facture_id = $facture_id";
-
-        $result_produits = mysqli_query($conn, $query_produits);
-
-        if (mysqli_num_rows($result_produits) > 0) {
-            $csv_data[] = '';
-            $csv_data[] = '"Produits Associés"';
-            $csv_data[] = '"Description","Quantité","Prix Unitaire"';
-
-            while ($produit = mysqli_fetch_assoc($result_produits)) {
-                $csv_data[] = '"' . implode('","', $produit) . '"';
-            }
-        }
-
-        // Définition de l'en-tête pour télécharger le fichier CSV
-        header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="facture_' . $facture_id . '.csv"');
-
-        // Affichage du CSV
-        echo implode("\n", $csv_data);
-    } else {
-        echo "Facture non trouvée.";
-    }
-} else {
-    echo "ID de facture non spécifié.";
+if ($result_factures === false) {
+    die("Erreur de requête : " . $conn->error);
 }
 
-// Fermeture de la connexion
-mysqli_close($conn);
+// Ouvrir le fichier CSV pour l'écriture
+header('Content-Type: text/csv');
+header('Content-Disposition: attachment;filename=factures.csv');
+
+$output = fopen('php://output', 'w');
+
+// Écrire les en-têtes CSV
+fputcsv($output, ['Ref Facture', 'Email Client', 'Date', 'Total', 'État', 'Produit', 'Prix Unitaire', 'Quantité']);
+
+// Variable pour stocker l'ID de la dernière facture afin de gérer l'affichage
+$last_facture_id = null;
+
+while ($row = $result_factures->fetch_assoc()) {
+    // Si c'est une nouvelle facture, écrire les détails de la facture
+    if ($last_facture_id !== $row['facture_id']) {
+        fputcsv($output, [
+            $row['facture_id'],
+            $row['client_email'],
+            date("d/m/Y", strtotime($row['date_creation'])),
+            number_format($row['total'], 2),
+            $row['etat'],
+            '', // Produit vide pour la première ligne de la facture
+            '', // Prix Unitaire vide pour la première ligne de la facture
+            '', // Quantité vide pour la première ligne de la facture
+        ]);
+        $last_facture_id = $row['facture_id'];
+    }
+
+    // Écrire les produits associés à la facture
+    fputcsv($output, [
+        '', // Facture vide pour les lignes de produit
+        '', // Email Client vide pour les lignes de produit
+        '', // Date vide pour les lignes de produit
+        '', // Total vide pour les lignes de produit
+        '', // État vide pour les lignes de produit
+        $row['produit_description'],
+        number_format($row['prix_unitaire'], 2),
+        $row['quantite']
+    ]);
+}
+
+fclose($output);
+$conn->close();
+exit();

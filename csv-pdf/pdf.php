@@ -9,7 +9,7 @@ if (
         $_SESSION['user_id'] == $_SESSION['client_id']
     )
 ) {
-    header("Location: ../login.php");
+    header("Location: ../public/login.php");
     exit();
 }
 
@@ -90,7 +90,7 @@ class pdf extends FPDF
 
         // Tableau contenant les titres des colonnes
         $header = array('Ref', 'Designation', 'Prix Unitaire HT', 'Qte', 'Prix Total HT');
-        $w = array(20, 88, 34, 20, 28);
+        $w = array(20, 80, 34, 20, 36);
         $al = array('C', 'L', 'C', 'C', 'C');
 
         // Impression des entêtes de colonnes

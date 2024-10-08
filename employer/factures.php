@@ -8,7 +8,7 @@ if (
         $_SESSION['role'] == 'employer'
     )
 ) {
-    header("Location: ../login.php");
+    header("Location: ../public/login.php");
     exit();
 }
 

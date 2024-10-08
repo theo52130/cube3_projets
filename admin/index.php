@@ -3,7 +3,7 @@ session_start();
 
 // Vérification de la connexion et du rôle
 if (!isset($_SESSION['nom']) || $_SESSION['role'] != 'admin') {
-    header("Location: ../login.php");
+    header("Location: ../public/login.php");
     exit();
 }
 
@@ -68,9 +68,9 @@ $result = mysqli_query($conn, $sql);
                         echo "<td>" . htmlspecialchars($row['siret'] ?? 'Non spécifié') . "</td>";
                         echo "<td>" . htmlspecialchars($row['role']) . "</td>";
                         echo "<td>
-                                <a href='update.php?id=" . htmlspecialchars($row['id']) . "' class='btn update-btn'>Modifier</a>
-                                <button onclick='deleteRow(" . htmlspecialchars($row['id']) . ")' class='btn delete-btn'>Supprimer</button>
-                            </td>";
+                            <a href='update.php?id=" . htmlspecialchars($row['id']) . "' class='btn update-btn'>Modifier</a>
+                            <button onclick='deleteRow(" . htmlspecialchars($row['id']) . ", \"account\")' class='btn delete-btn'>Supprimer</button>
+                        </td>";
                         echo "</tr>";
                     }
                 } else {
@@ -85,7 +85,9 @@ $result = mysqli_query($conn, $sql);
     </div>
 
     <script>
-        function deleteRow(id) {
+        function deleteRow(id, type) {
+            const action = type === 'account' ? 'delete_account' : 'delete_invoice';
+
             if (confirm('Êtes-vous sûr de vouloir supprimer cet élément ?')) {
                 fetch('delete.php', {
                         method: 'POST',
@@ -93,14 +95,19 @@ $result = mysqli_query($conn, $sql);
                             'Content-Type': 'application/x-www-form-urlencoded',
                         },
                         body: new URLSearchParams({
-                            'action': 'delete',
+                            'action': action,
                             'id': id
                         })
                     })
                     .then(response => response.text())
                     .then(result => {
                         if (result.trim() === 'success') {
-                            document.getElementById('row-' + id).remove();
+                            if (type === 'account') {
+                                document.getElementById('row-' + id).remove(); // Supprime le compte
+                            } else {
+                                document.getElementById('row-facture-' + id).remove(); // Supprime la facture
+                                document.getElementById('detail-factures-' + id).remove(); // Supprime les détails
+                            }
                         } else {
                             alert('Erreur lors de la suppression');
                         }

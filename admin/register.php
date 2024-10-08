@@ -1,15 +1,9 @@
 <?php
-
 session_start();
 
 // Vérification de la connexion et du rôle
-if (
-    !isset($_SESSION['nom']) ||
-    !(
-        $_SESSION['role'] == 'admin'
-    )
-) {
-    header("Location: ../login.php");
+if (!isset($_SESSION['nom']) || $_SESSION['role'] != 'admin') {
+    header("Location: ../public/login.php");
     exit();
 }
 
@@ -19,16 +13,20 @@ require '../includes/config.php';
 // Traitement de la demande de suppression
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] == 'delete') {
     $id = intval($_POST['id']);
-    $deleteSql = "DELETE FROM comptes WHERE id = $id";
-    if (mysqli_query($conn, $deleteSql)) {
+    $deleteSql = "DELETE FROM comptes WHERE id = ?";
+    $stmt = $conn->prepare($deleteSql);
+    $stmt->bind_param("i", $id);
+
+    if ($stmt->execute()) {
         echo 'success';
     } else {
         echo 'error';
     }
+    $stmt->close();
 }
 
 // Traitement du formulaire d'inscription
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['action'])) {
     // Sécuriser les entrées utilisateur
     $nom = mysqli_real_escape_string($conn, $_POST['nom']);
     $email = mysqli_real_escape_string($conn, $_POST['email']);
@@ -44,28 +42,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    // Générer un token aléatoire
-    $token = bin2hex(random_bytes(50));
-
     // Préparer la requête SQL pour éviter l'injection SQL
-    $stmt = $conn->prepare("INSERT INTO comptes (nom, email, adresse, email_entreprise, siret, password, role, token) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssssss", $nom, $email, $adresse, $email_entreprise, $siret, $password, $role, $token);
+    $stmt = $conn->prepare("INSERT INTO comptes (nom, email, adresse, email_entreprise, siret, password, role) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssssss", $nom, $email, $adresse, $email_entreprise, $siret, $password, $role);
 
     if ($stmt->execute()) {
-        // Redirection après inscription réussie
-        echo '<script>
-            if (window.history.length > 2) {
-                window.history.go(-2);
-            } else {
-                window.location.href = "redirection.php";
-            }
-        </script>';
+        header("Location: index.php");
         exit();
     } else {
-        // Afficher un message d'erreur sans divulguer des détails techniques
-        echo "Erreur lors de l'inscription. Veuillez réessayer.";
+        echo "Erreur: " . htmlspecialchars($stmt->error);
     }
-
     $stmt->close();
     $conn->close();
 }
@@ -95,25 +81,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <label>*Adresse (rue, ville) :</label>
         <input type="text" name="adresse" required><br>
 
-        <label>Email Entreprise (obligatoire si entreprise):</label>
+        <label>Email Entreprise (obligatoire si entreprise) :</label>
         <input type="email" name="email_entreprise"><br>
 
-        <label>SIRET (obligatoire si entreprise):</label>
+        <label>SIRET (obligatoire si entreprise) :</label>
         <input type="text" name="siret"><br>
 
         <label>*Mot de passe :</label>
-        <input type="password" name="password" required><br>
+        <input type="password" name="password" required>
 
-        <label>*Rôle:</label>
+        <label>*Rôle :</label>
         <select name="role" required>
             <option value="client">Client</option>
-            <option value="employer">Employé</option>
+            <option value="employe">Employé</option>
             <option value="admin">Admin</option>
         </select><br>
 
         <input type="submit" value="Créer le compte">
     </form>
-
 </body>
 
 </html>
