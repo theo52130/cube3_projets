@@ -103,10 +103,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Toggle the type attribute
                 if (passwordInput.type === 'password') {
                     passwordInput.type = 'text';
-                    eyeIcon.src = './assets/img/visibility_open.svg'; // Change the icon to show the password is visible
+                    eyeIcon.src = '../assets/img/visibility_open.svg'; // Change the icon to show the password is visible
                 } else {
                     passwordInput.type = 'password';
-                    eyeIcon.src = './assets/img/visibility_close.svg'; // Change the icon to hide the password
+                    eyeIcon.src = '../assets/img/visibility_close.svg'; // Change the icon to hide the password
                 }
             });
         });
