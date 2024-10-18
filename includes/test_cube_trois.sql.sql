@@ -17,7 +17,6 @@ CREATE TABLE factures (
     id INT AUTO_INCREMENT PRIMARY KEY,
     client_id INT,
     date_creation DATE NOT NULL DEFAULT CURRENT_DATE,
-    quantite_produits INT NOT NULL,
     total DECIMAL(10, 2) NOT NULL,
     etat ENUM('payée', 'non payée') DEFAULT 'non payée',
     FOREIGN KEY (client_id) REFERENCES comptes (id) ON DELETE CASCADE
@@ -32,7 +31,16 @@ CREATE TABLE produits (
 CREATE TABLE factures_produits (
     facture_id INT,
     produit_id INT,
+    quantite INT NOT NULL,
     PRIMARY KEY (facture_id, produit_id),
     FOREIGN KEY (facture_id) REFERENCES factures (id) ON DELETE CASCADE,
     FOREIGN KEY (produit_id) REFERENCES produits (id) ON DELETE CASCADE
+);
+
+CREATE TABLE tokens (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    token VARCHAR(64) NOT NULL,
+    expiry INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES comptes (id) ON DELETE CASCADE
 );
